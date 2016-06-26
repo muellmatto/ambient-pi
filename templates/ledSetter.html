@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="./jscolor.js"></script>
+    </head>
+    <body>
+        <button
+            id="led1"
+            class="jscolor {valueElement:null,value:'{{ led1Color }}'}"
+            style="width: 100%; height:100px;">LED 1</button>
+        <br>
+        <br>
+        <button
+            id="led2"
+            class="jscolor {valueElement:null,value:'{{ led2Color }}'}"
+            style="width: 100%; height:100px;">LED 2</button>
+        <br>
+        <br>
+        <button 
+            onclick="seturl()"
+            style="width: 100%; height: 50px;">Set LEDcolor</button>
+        <br>
+        <br>
+        <br>
+        <button
+            onclick="setboth()"
+            style="width: 100%; height: 50px;">Set Both</a>
+        <script>
+        function setboth(){
+            var led1 = document.getElementById('led1').style.backgroundColor;
+            led1 = led1.split("(")[1].split(")")[0].split(",");
+            var colorCode = 
+                led1[0] + ',' +
+                led1[1] + ',' +
+                led1[2] + '&' +
+                led1[0] + ',' +
+                led1[1] + ',' +
+                led1[2]
+            ;
+            // alert(colorCode);
+            window.location.replace('/' + colorCode);
+        }
+
+        function seturl(){
+            var led1 = document.getElementById('led1').style.backgroundColor;
+            led1 = led1.split("(")[1].split(")")[0].split(",");
+            var led2 = document.getElementById('led2').style.backgroundColor;
+            led2 = led2.split("(")[1].split(")")[0].split(",");
+            var colorCode = 
+                led1[0] + ',' +
+                led1[1] + ',' +
+                led1[2] + '&' +
+                led2[0] + ',' +
+                led2[1] + ',' +
+                led2[2]
+            ;
+            // alert(colorCode);
+            window.location.replace('/' + colorCode);
+        }
+
+        </script>
+    </body>
+</html>
