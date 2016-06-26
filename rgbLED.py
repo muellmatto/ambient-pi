@@ -11,6 +11,8 @@ class rgbLED:
         self.redPin = redPin
         self.bluePin = bluePin
         self.STARTED = False
+        self.rawColor="50,50,50"
+        self.color="128,128,128"
     
     def start(self):
         """ Starts the LED """
@@ -22,11 +24,9 @@ class rgbLED:
             self.green = RPi.GPIO.PWM(self.greenPin, 100)
             self.red = RPi.GPIO.PWM(self.redPin, 100)
             self.blue = RPi.GPIO.PWM(self.bluePin, 100)
-            self.green.start(100)
-            self.red.start(100)
-            self.blue.start(100)
-            self.rawColor="100,100,100"
-            self.color="255,255,255"
+            self.green.start(50)
+            self.red.start(50)
+            self.blue.start(50)
             self.STARTED = True
         else:
             print("LED already started, stop it first")
@@ -38,6 +38,8 @@ class rgbLED:
         self.blue.stop()
         RPi.GPIO.cleanup()
         self.STARTED = False
+        self.rawColor="0,0,0"
+        self.color="0,0,0"
 
     def stop(self):
         """ Stops the LED """
@@ -45,8 +47,9 @@ class rgbLED:
             self.green.stop()
             self.red.stop()
             self.blue.stop()
-            RPi.GPIO.cleanup()
             self.STARTED = False
+            self.rawColor="0,0,0"
+            self.color="0,0,0"
         else:
             print("LED is not running, start it first")
 

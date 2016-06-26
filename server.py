@@ -19,8 +19,6 @@ app = flask.Flask(__name__)
 ## Create RGB-LEDS
 led1 = rgbLED.rgbLED(27,17,22)
 led2 = rgbLED.rgbLED(19,13,26)
-led1.start()
-led2.start()
 
 
 
@@ -34,8 +32,21 @@ def hello():
 def jsshit():
     return flask.render_template("jscolor.js")
 
+@app.route("/off")
+def off():
+    led1.stop()
+    led2.stop()
+    return flask.render_template("ledSetter.html", led1Color="rgb(0,0,0)", led2Color="rgb(0,0,0)")
+
+
+
+
 @app.route("/<handleThis>")
 def handler(handleThis):
+    if led1.STARTED == False:
+        led1.start()
+    if led2.STARTED == False:
+        led2.start()
     led1Color, led2Color = handleThis.split("&")
     r, g, b = led1Color.split(",")
     led1.setColor(int(r) , int(g) , int(b) )
