@@ -11,6 +11,7 @@ class rgbLED:
         self.redPin = redPin
         self.bluePin = bluePin
         self.STARTED = False
+        self.MAX_POWER_PERCENT = 40
         RPi.GPIO.setmode(RPi.GPIO.BCM)
         RPi.GPIO.setup(self.greenPin, RPi.GPIO.OUT)
         RPi.GPIO.setup(self.redPin, RPi.GPIO.OUT)
@@ -63,9 +64,10 @@ class rgbLED:
     def setColor(self, r,g,b):
         if self.STARTED == True:
             self.color = str(r) + ',' + str(g) + ',' + str(b)
-            r=round(r*100/255 ,0)
-            g=round(g*100/255 ,0)
-            b=round(b*100/255 ,0)
+            q=self.MAX_POWER_PERCENT
+            r=round(r*q/255 ,0)
+            g=round(g*q/255 ,0)
+            b=round(b*q/255 ,0)
             self.red.ChangeDutyCycle(r)
             self.green.ChangeDutyCycle(g)
             self.blue.ChangeDutyCycle(b)
