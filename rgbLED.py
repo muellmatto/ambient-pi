@@ -11,16 +11,15 @@ class rgbLED:
         self.redPin = redPin
         self.bluePin = bluePin
         self.STARTED = False
-        self.rawColor="50,50,50"
+        RPi.GPIO.setmode(RPi.GPIO.BCM)
+        RPi.GPIO.setup(self.greenPin, RPi.GPIO.OUT)
+        RPi.GPIO.setup(self.redPin, RPi.GPIO.OUT)
+        RPi.GPIO.setup(self.bluePin, RPi.GPIO.OUT)
         self.color="128,128,128"
     
     def start(self):
         """ Starts the LED """
         if self.STARTED == False:
-            RPi.GPIO.setmode(RPi.GPIO.BCM)
-            RPi.GPIO.setup(self.greenPin, RPi.GPIO.OUT)
-            RPi.GPIO.setup(self.redPin, RPi.GPIO.OUT)
-            RPi.GPIO.setup(self.bluePin, RPi.GPIO.OUT)
             self.green = RPi.GPIO.PWM(self.greenPin, 100)
             self.red = RPi.GPIO.PWM(self.redPin, 100)
             self.blue = RPi.GPIO.PWM(self.bluePin, 100)
@@ -38,7 +37,6 @@ class rgbLED:
         self.blue.stop()
         RPi.GPIO.cleanup()
         self.STARTED = False
-        self.rawColor="0,0,0"
         self.color="0,0,0"
 
     def stop(self):
@@ -48,22 +46,27 @@ class rgbLED:
             self.red.stop()
             self.blue.stop()
             self.STARTED = False
-            self.rawColor="0,0,0"
             self.color="0,0,0"
         else:
             print("LED is not running, start it first")
 
     def setRawColor(self, r,g,b):
-        self.red.ChangeDutyCycle(r)
-        self.green.ChangeDutyCycle(g)
-        self.blue.ChangeDutyCycle(b)
-        self.Rawcolor = str(r) + ',' + str(g) + ',' + str(b)
+        if self.STARTED == True:
+            self.red.ChangeDutyCycle(r)
+            self.green.ChangeDutyCycle(g)
+            self.blue.ChangeDutyCycle(b)
+            self.color = str(int(r*2.55)) + ',' + str(int(g*2.55)) + ',' + str(int(b*2.55))
+        else:
+            print("Start LED first")
 
     def setColor(self, r,g,b):
-        self.color = str(r) + ',' + str(g) + ',' + str(b)
-        r=round(r*100/255 ,0)
-        g=round(g*100/255 ,0)
-        b=round(b*100/255 ,0)
-        self.red.ChangeDutyCycle(r)
-        self.green.ChangeDutyCycle(g)
-        self.blue.ChangeDutyCycle(b)
+        if self.STARTED == True:
+            self.color = str(r) + ',' + str(g) + ',' + str(b)
+            r=round(r*100/255 ,0)
+            g=round(g*100/255 ,0)
+            b=round(b*100/255 ,0)
+            self.red.ChangeDutyCycle(r)
+            self.green.ChangeDutyCycle(g)
+            self.blue.ChangeDutyCycle(b)
+        else:
+            print("Start LED first")
