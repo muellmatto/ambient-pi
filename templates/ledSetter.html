@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="./jscolor.js"></script>
+        <script src="{{ url_for('static', filename='jscolor.js') }}"></script>
     </head>
     <body>
         <button
@@ -19,15 +19,25 @@
         <br>
         <button 
             onclick="seturl()"
-            style="width: 100%; height: 50px;">Set LEDcolor</button>
-        <br>
+            style="width: 49%; height: 50px;">Set LEDcolor</button>
         <button
             onclick="setboth()"
-            style="width: 100%; height: 50px;">Set Both</a>
+            style="width: 49%; height: 50px;">Set Both</button>
+        <br>
         <br>
         <button
             onclick="window.location.replace('/off');"
-            style="width: 100%; height: 50px;">Off</a>
+            style="width: 100%; height: 50px;">Off</button>
+        <br>
+        <br>
+        <button
+            style="width: 50%; height: 50px;"
+            onclick="window.location.replace('/timer/' + document.getElementById('snoozeTime').value*60);"
+            >Set Snooze minutes</button>
+        <input style="width: 45%; height:40px;" value="10" type="number" id="snoozeTime" min="5" max="30" step="5">
+        <br>
+        <br>
+        <span>{{ snoozeTimer }} s to go</span>
         <script>
         function setboth(){
             var led1 = document.getElementById('led1').style.backgroundColor;
@@ -41,7 +51,7 @@
                 led1[2]
             ;
             // alert(colorCode);
-            window.location.replace('/' + colorCode);
+            window.location.replace('/set/' + colorCode);
         }
 
         function seturl(){
@@ -58,7 +68,7 @@
                 led2[2]
             ;
             // alert(colorCode);
-            window.location.replace('/' + colorCode);
+            window.location.replace('/set/' + colorCode);
         }
 
         </script>
