@@ -3,6 +3,7 @@ import signal
 import sys
 import time
 import threading
+# import rgbLEDdummy as rgbLED
 import rgbLED
 
 
@@ -30,7 +31,10 @@ snoozeTimer = 0
 
 @app.route("/")
 def hello():
-    return flask.render_template("ledSetter.html", led1Color="rgb(" + led1.color + ")", led2Color="rgb(" + led2.color + ")" , snoozeTimer=str(snoozeTimer))
+    r1, g1, b1 = led1.color.split(",")
+    r2, g2, b2 = led2.color.split(",")
+    ledData = { 'led': [ {'color':{'r': r1, 'g': g1, 'b': b1 }} , {'color':{'r': r2, 'g': g2, 'b': b2 }} ] , 'snoozeTimer':str(snoozeTimer) }
+    return flask.render_template("ledSetter.html", ledData=ledData)
 
 
 @app.route("/off")
@@ -39,7 +43,10 @@ def off():
     snoozeTimer = 0
     led1.stop()
     led2.stop()
-    return flask.render_template("ledSetter.html", led1Color="rgb(0,0,0)", led2Color="rgb(0,0,0)", snoozeTimer=str(snoozeTimer))
+    r1, g1, b1 = "0,0,0".split(",")
+    r2, g2, b2 = "0,0,0".split(",")
+    ledData = { 'led': [ {'color':{'r': r1, 'g': g1, 'b': b1 }} , {'color':{'r': r2, 'g': g2, 'b': b2 }} ] , 'snoozeTimer':str(snoozeTimer) }
+    return flask.render_template("ledSetter.html", ledData=ledData)
 
 
 
@@ -53,18 +60,22 @@ def handler(handleThis):
     if led2.STARTED == False:
         led2.start()
     led1Color, led2Color = handleThis.split("&")
-    r, g, b = led1Color.split(",")
-    led1.setColor(int(r) , int(g) , int(b) )
-    r, g, b = led2Color.split(",")
-    led2.setColor(int(r) , int(g) , int(b) )
-    return flask.render_template("ledSetter.html", led1Color="rgb("+led1.color+")", led2Color="rgb("+led2.color+")" , snoozeTimer=str(snoozeTimer))
+    r1, g1, b1 = led1Color.split(",")
+    led1.setColor(int(r1) , int(g1) , int(b1) )
+    r2, g2, b2 = led2Color.split(",")
+    led2.setColor(int(r2) , int(g2) , int(b2) )
+    ledData = { 'led': [ {'color':{'r': r1, 'g': g1, 'b': b1 }} , {'color':{'r': r2, 'g': g2, 'b': b2 }} ] , 'snoozeTimer':str(snoozeTimer) }
+    return flask.render_template("ledSetter.html", ledData=ledData)
 
 
 @app.route("/timer/<int:snooze>")
 def timer(snooze):
     a = threading.Thread(target=snoozing, args=[snooze])
     a.start()
-    return flask.render_template("ledSetter.html", led1Color="rgb("+led1.color+")", led2Color="rgb("+led2.color+")" , snoozeTimer=str(snoozeTimer))
+    r1, g1, b1 = led1.color.split(",")
+    r2, g2, b2 = led2.color.split(",")
+    ledData = { 'led': [ {'color':{'r': r1, 'g': g1, 'b': b1 }} , {'color':{'r': r2, 'g': g2, 'b': b2 }} ] , 'snoozeTimer':str(snoozeTimer) }
+    return flask.render_template("ledSetter.html", ledData=ledData)
 
 
 def snoozing(snooze):
@@ -83,4 +94,5 @@ def snoozing(snooze):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+    app.run(host="0.0.0.0", port=8000)
+    # app.run(host="0.0.0.0", port=80)

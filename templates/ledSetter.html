@@ -2,20 +2,50 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="{{ url_for('static', filename='jscolor.js') }}"></script>
     </head>
     <body>
-        <button
-            id="led1"
-            class="jscolor {valueElement:null,value:'{{ led1Color }}'}"
-            style="width: 100%; height:100px;">LED 1</button>
-        <br>
-        <br>
-        <button
-            id="led2"
-            class="jscolor {valueElement:null,value:'{{ led2Color }}'}"
-            style="width: 100%; height:100px;">LED 2</button>
-        <br>
+
+        <div id="led1"
+            style=" width: 99%; 
+                    height: 120px; 
+                    border: 5px black solid;
+                    background-color: rgb({{ ledData.led[0].color.r }},{{ ledData.led[0].color.g }},{{ ledData.led[0].color.b }});">
+                <span>LED 1</span>
+                <br>
+                <input oninput="updateColor(this.id)" style="background-color: red; width: 100%; max-width: 300px;" 
+                    id="led1-r" type="range" min="0" max="255" value="{{ ledData.led[0].color.r }}">
+                </input>
+                <br>
+                <input oninput="updateColor(this.id)" style="background-color: green; width: 100%; max-width: 300px;" 
+                    id="led1-g" type="range" min="0" max="255" value="{{ ledData.led[0].color.g }}">
+                </input>
+                <br>
+                <input oninput="updateColor(this.id)" style="background-color: blue; width: 100%; max-width: 300px;" 
+                    id="led1-b" type="range" min="0" max="255" value="{{ ledData.led[0].color.b }}">
+                </input>
+
+        </div>
+
+        <div id="led2" 
+            style=" width: 99%; 
+                    height: 120px;
+                    border: 5px black solid; 
+                    background-color: rgb({{ ledData.led[1].color.r }},{{ ledData.led[1].color.g }},{{ ledData.led[1].color.b }});">
+                <span>LED 2</span>
+                <br>
+                <input oninput="updateColor(this.id)" style="background-color: red; width: 100%; max-width: 300px;" 
+                    id="led2-r" type="range" min="0" max="255" value="{{ ledData.led[1].color.r }}">
+                </input>
+                <br>
+                <input oninput="updateColor(this.id)" style="background-color: green; width: 100%; max-width: 300px;" 
+                    id="led2-g" type="range" min="0" max="255" value="{{ ledData.led[1].color.g }}">
+                </input>
+                <br>
+                <input oninput="updateColor(this.id)" style="background-color: blue; width: 100%; max-width: 300px;" 
+                    id="led2-b" type="range" min="0" max="255" value="{{ ledData.led[1].color.b }}">
+                </input>
+
+        </div>
         <br>
         <button 
             onclick="seturl()"
@@ -37,8 +67,21 @@
         <input style="width: 45%; height:40px;" value="10" type="number" id="snoozeTime" min="5" max="30" step="5">
         <br>
         <br>
-        <span>{{ snoozeTimer }} s to go</span>
+        <span>{{ ledData.snoozeTimer }} s to go</span>
         <script>
+        function updateColor(id){
+            // a = document.getElementById(id);
+            // a.style.backgroundColor = 'rgb(' + a.value+ ',0,0)';
+            r1 = document.getElementById('led1-r').value;
+            g1 = document.getElementById('led1-g').value;
+            b1 = document.getElementById('led1-b').value;
+            r2 = document.getElementById('led2-r').value;
+            g2 = document.getElementById('led2-g').value;
+            b2 = document.getElementById('led2-b').value;
+            document.getElementById('led1').style.backgroundColor = 'rgb(' + r1 +','+ g1 +','+ b1 +')';
+            document.getElementById('led2').style.backgroundColor = 'rgb(' + r2 +','+ g2 +','+ b2 +')';
+        }
+
         function setboth(){
             var led1 = document.getElementById('led1').style.backgroundColor;
             led1 = led1.split("(")[1].split(")")[0].split(",");
@@ -50,6 +93,7 @@
                 led1[1] + ',' +
                 led1[2]
             ;
+            colorCode = colorCode.replace(/ /g,'');
             // alert(colorCode);
             window.location.replace('/set/' + colorCode);
         }
@@ -67,6 +111,7 @@
                 led2[1] + ',' +
                 led2[2]
             ;
+            colorCode = colorCode.replace(/ /g,'');
             // alert(colorCode);
             window.location.replace('/set/' + colorCode);
         }
